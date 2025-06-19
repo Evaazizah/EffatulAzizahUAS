@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pejuang LDR</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+    <div id="main-page">
+        <h1>Pejuang LDR</h1>
+        <p>Selamat datang di Pejuang LDR! Klik untuk mengirim pesan atau melihat galeri.</p>
+        <button onclick="showSection('message-section')">Kirim Pesan</button>
+        <button onclick="showSection('gallery-section')">Lihat Galeri</button>
+    </div>
+
+    <!-- Kotak Pesan -->
+    <div id="message-section" class="section" style="display: none;">
+        <h2>Kotak Pesan Romantis</h2>
+        <form action="kirim_pesan.php" method="POST" id="message-form">
+            <textarea name="message" placeholder="Tulis pesan cinta untuk pasanganmu..." required></textarea>
+            <button type="submit">Kirim Pesan</button>
+        </form>
+        <div class="status-message"></div>
+        <div class="messages">
+            <h3>Pesan yang Dikirim:</h3>
+            <?php
+            // Menampilkan pesan dari file messages.php
+            include 'messages.php';
+            ?>
+        </div>
+        <button onclick="showSection('main-page')">Kembali ke Awal</button>
+    </div>
+
+    <!-- Galeri Momen Bersama -->
+    <div id="gallery-section" class="section" style="display: none;">
+        <h2>Galeri Momen Bersama</h2>
+        <form action="unggah_foto.php" method="POST" enctype="multipart/form-data" id="upload-form">
+            <input type="file" name="image" accept="image/*" required>
+            <button type="submit">Unggah Foto</button>
+        </form>
+        <div class="status-message"></div>
+        <div class="gallery">
+            <?php
+            // Menampilkan gambar yang diunggah
+            $images = glob("uploads/*.*");
+            foreach ($images as $image) {
+                echo '<img src="'.$image.'" alt="Momen Bersama">';
+            }
+            ?>
+        </div>
+        <button onclick="showSection('main-page')">Kembali ke Awal</button>
+    </div>
+
+    <script>
+        // Function untuk menampilkan dan menyembunyikan bagian
+        function showSection(sectionId) {
+            document.getElementById('main-page').style.display = 'none';
+            document.getElementById('message-section').style.display = 'none';
+            document.getElementById('gallery-section').style.display = 'none';
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Menambahkan event listener untuk form pengiriman pesan
+        document.getElementById('message-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Lakukan validasi tambahan di sini
+            const statusMessage = document.querySelector('.status-message');
+            statusMessage.textContent = "Pesan sedang dikirim...";
+            // Anda bisa menambahkan logika AJAX di sini untuk pengiriman tanpa reload halaman
+        });
+
+        // Menambahkan event listener untuk form unggah foto
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Lakukan validasi tambahan di sini
+            const statusMessage = document.querySelector('.status-message');
+            statusMessage.textContent = "Foto sedang diunggah...";
+            // Anda bisa menambahkan logika AJAX di sini untuk unggah tanpa reload halaman
+        });
+    </script>
+</body>
+</html>
